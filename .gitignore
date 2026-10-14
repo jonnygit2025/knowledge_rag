@@ -218,3 +218,11 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local corpus, configuration, exports, backups, databases and vector projections
+data/
+backups/
+config.yaml
+*.dump
+qdrant_storage/
+postgres_data/

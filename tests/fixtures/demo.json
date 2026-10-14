@@ -1,0 +1,36 @@
+[
+  {
+    "source_key": "demo:video:1",
+    "source_type": "youtube_transcript",
+    "title": "DEMO — PostgreSQL e Qdrant in una pipeline RAG",
+    "url": "https://example.com/knowledge-rag/demo-video-1",
+    "segments": [
+      {"text": "PostgreSQL conserva i documenti originali e le loro versioni.", "start": 0, "duration": 8},
+      {"text": "Qdrant indicizza i chunk per la ricerca vettoriale.", "start": 8, "duration": 7},
+      {"text": "Ogni risultato di Qdrant viene verificato usando la versione attiva in PostgreSQL.", "start": 15, "duration": 10}
+    ],
+    "metadata": {"channel": "Canale sintetico DEMO", "language": "it", "published_at": "2026-10-13T16:00:00+00:00", "tags": ["RAG", "database"], "provider": "fixture", "synthetic": true},
+    "relations": [
+      {"subject_key": "https://qdrant.tech/", "subject": "Qdrant", "predicate": "indexes", "object_key": "concept:chunks", "object": "chunk", "quote": "Qdrant indicizza i chunk per la ricerca vettoriale."}
+    ]
+  },
+  {
+    "source_key": "demo:readme:1",
+    "source_type": "github_readme",
+    "title": "DEMO — README della pipeline",
+    "url": "https://example.com/knowledge-rag/demo-readme",
+    "text": "Qdrant indicizza i chunk per la ricerca vettoriale. PostgreSQL conserva gli originali. Un outbox transazionale permette di ritentare gli upsert senza duplicare i punti. Gli export Markdown sono rigenerabili dal database.",
+    "metadata": {"language": "it", "tags": ["RAG", "outbox"], "provider": "fixture", "synthetic": true, "commit_sha": "0000000000000000000000000000000000000000", "path": "README.md"},
+    "relations": [
+      {"subject_key": "https://qdrant.tech/", "subject": "Qdrant", "predicate": "indexes", "object_key": "concept:chunks", "object": "chunk", "quote": "Qdrant indicizza i chunk per la ricerca vettoriale."}
+    ]
+  },
+  {
+    "source_key": "demo:article:1",
+    "source_type": "web_page",
+    "title": "DEMO — Provenienza e limiti delle fonti",
+    "url": "https://example.com/knowledge-rag/demo-provenance",
+    "text": "Il grafo conserva evidenze collegate a documento, versione e chunk. PostgreSQL è la fonte autorevole dei dati applicativi; non garantisce la verità delle affermazioni delle fonti. GitHub conserva il codice. Le trascrizioni YouTube possono essere indisponibili: in questo caso serve un import manuale.",
+    "metadata": {"language": "it", "tags": ["provenienza", "YouTube"], "provider": "fixture", "synthetic": true}
+  }
+]

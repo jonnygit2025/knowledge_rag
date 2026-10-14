@@ -1,0 +1,15 @@
+# Inserire UC... oppure @handle. Nessun canale personale è preconfigurato.
+channels: []
+# Esempio:
+# channels:
+#   - reference: "@nomecanale"
+#     enabled: true
+languages: [it, en]
+initial_days: 30
+initial_max_videos: 10
+include_live: false
+# Gli Shorts sono inclusi: la durata da sola non è una classificazione affidabile.
+fetch_external: false
+max_external_links: 5
+# Solo sostituzioni esatte e approvate dall'utente. Nessuna riscrittura LLM automatica.
+glossary: {}

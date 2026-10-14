@@ -1,0 +1,61 @@
+name: knowledge-rag
+x-app: &app
+  build: .
+  env_file: .env
+  environment:
+    DATABASE_URL: postgresql+psycopg://knowledge:${POSTGRES_PASSWORD:-knowledge}@postgres:5432/knowledge
+    QDRANT_URL: http://qdrant:6333
+    CONFIG_FILE: /app/config.yaml
+    EXPORT_DIR: /app/data/exports
+    IMPORT_DIR: /app/data/imports
+  volumes:
+    - ./config.yaml:/app/config.yaml
+    - ./data:/app/data
+
+services:
+  postgres:
+    image: postgres:17.6-bookworm
+    environment:
+      POSTGRES_USER: knowledge
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-knowledge}
+      POSTGRES_DB: knowledge
+    ports: ["127.0.0.1:5432:5432"]
+    volumes: ["postgres_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U knowledge -d knowledge"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+  qdrant:
+    image: qdrant/qdrant:v1.19.2
+    ports: ["127.0.0.1:6333:6333"]
+    volumes: ["qdrant_data:/qdrant/storage"]
+    restart: unless-stopped
+  init:
+    <<: *app
+    command: ["sh", "-c", "knowledge-rag migrate && if [ \"$$DEMO_MODE\" = \"true\" ]; then knowledge-rag demo; fi"]
+    depends_on:
+      postgres: {condition: service_healthy}
+  worker:
+    <<: *app
+    command: ["knowledge-rag", "worker"]
+    depends_on:
+      init: {condition: service_completed_successfully}
+      qdrant: {condition: service_started}
+    restart: unless-stopped
+  ui:
+    <<: *app
+    command: ["streamlit", "run", "src/knowledge_rag/ui.py", "--server.address=0.0.0.0", "--browser.gatherUsageStats=false"]
+    ports: ["127.0.0.1:8501:8501"]
+    depends_on:
+      init: {condition: service_completed_successfully}
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8501/_stcore/health')"]
+      interval: 10s
+      retries: 10
+    restart: unless-stopped
+
+volumes:
+  postgres_data:
+  qdrant_data:
